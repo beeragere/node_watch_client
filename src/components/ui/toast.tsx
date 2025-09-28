@@ -1,6 +1,5 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 const toastVariants = cva(
   "relative flex items-center justify-between w-full p-4 pr-8 rounded-md border shadow-md bg-white",
