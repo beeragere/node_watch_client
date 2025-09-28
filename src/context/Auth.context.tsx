@@ -4,7 +4,13 @@ import type {
   LoginPayloadType,
   RegisterPayloadType,
 } from "@/types/authTypes";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/axiosSetup";
 
@@ -14,6 +20,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // --- Check session on mount ---
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get("/users/profile");
+        setIsAuthenticated(true);
+        setUser(res.data);
+      } catch (err) {
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   // Login mutation
   const loginMutation = useMutation({
@@ -43,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onError: (err) => console.error("Register failed", err),
   });
 
-  // Functions exposed to components
   const login = (payload: LoginPayloadType) =>
     loginMutation.mutateAsync(payload);
   const register = (payload: RegisterPayloadType) =>
@@ -59,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{ isAuthenticated, user, login, logout, register }}
     >
-      {children}
+      {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
 }
