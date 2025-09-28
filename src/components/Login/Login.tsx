@@ -13,6 +13,7 @@ import { useAuth } from "@/context/Auth.context";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/ToastProvider";
 import { useState } from "react";
+import { routes } from "../Router/routes";
 
 export default function Login() {
   const { login } = useAuth();
@@ -31,7 +32,7 @@ export default function Login() {
       const success = await login({ email, password }); // Update login to accept payload
       if (success) {
         showToast("Success", "Logged in successfully!");
-        navigate("/home");
+        navigate(routes.dashboard);
       } else {
         showToast("Error", "Invalid email or password");
       }
