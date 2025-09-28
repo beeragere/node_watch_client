@@ -1,8 +1,7 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Bell, Moon, Sun } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { useTheme } from "@/components/ui/theme-provider";
-import Logo from "@/assets/images/logo.svg";
+import { Moon, Sun } from "lucide-react";
 
 type HeaderProps = {
   title?: string;
