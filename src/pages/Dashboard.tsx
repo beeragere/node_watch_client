@@ -1,137 +1,175 @@
+import { useQuery } from "@tanstack/react-query";
+import { dashboardApi } from "@/api/dashboard.api";
 import AppHeader from "@/components/Header/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown } from "lucide-react";
 import {
-  LineChart,
-  Line,
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
   CartesianGrid,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
 } from "recharts";
-
-// Sample data
-const orderData = [
-  { day: "01", January: 1000, February: 1200 },
-  { day: "05", January: 1500, February: 1800 },
-  { day: "10", January: 1400, February: 1900 },
-  { day: "15", January: 1600, February: 2000 },
-  { day: "20", January: 1700, February: 2500 },
-  { day: "25", January: 1200, February: 2100 },
-  { day: "30", January: 1300, February: 2200 },
-];
-
-const revenueData = [
-  { date: "Jan, 01", value: 2000 },
-  { date: "Jan, 07", value: 6000 },
-  { date: "Jan, 14", value: 12000 },
-  { date: "Jan, 21", value: 20000 },
-  { date: "Jan, 28", value: 45000 },
-];
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
 
 export default function Dashboard() {
+  const { data: summary } = useQuery({
+    queryKey: ["dashboard-summary"],
+    queryFn: dashboardApi.getSummary,
+  });
+
+  const { data: casesByStatus } = useQuery({
+    queryKey: ["cases-by-status"],
+    queryFn: dashboardApi.getCasesByStatus,
+  });
+
+  const { data: casesBySeverity } = useQuery({
+    queryKey: ["cases-by-severity"],
+    queryFn: dashboardApi.getCasesBySeverity,
+  });
+
+  const { data: recentCases } = useQuery({
+    queryKey: ["recent-cases"],
+    queryFn: dashboardApi.getRecentCases,
+  });
+
   return (
     <div className="p-6 space-y-6">
       <AppHeader />
-      {/* Top Metrics */}
+
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Total Cases</CardTitle>
+            <CardTitle>Servers</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">10,000</p>
-            <p className="flex items-center text-sm text-green-600">
-              <TrendingUp className="h-4 w-4 mr-1" /> +17% /Month
-            </p>
+            <p className="text-2xl font-bold">{summary?.groups ?? "-"}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Pending Cases</CardTitle>
+            <CardTitle>Cases</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">$87,363</p>
-            <p className="flex items-center text-sm text-green-600">
-              <TrendingUp className="h-4 w-4 mr-1" /> +11% /Month
-            </p>
+            <p className="text-2xl font-bold">{summary?.cases ?? "-"}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Closed Cases</CardTitle>
+            <CardTitle>Vendors</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">120</p>
-            <p className="flex items-center text-sm text-red-600">
-              <TrendingDown className="h-4 w-4 mr-1" /> -15% /Month
-            </p>
+            <p className="text-2xl font-bold">{summary?.vendors ?? "-"}</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Analytics + Revenue */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Order Analytics */}
-        <Card className="lg:col-span-2">
+      {/* Charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Cases by Status */}
+        <Card>
           <CardHeader>
-            <CardTitle>Order Analytics</CardTitle>
+            <CardTitle>Cases by Status</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-xl font-semibold">12,120.00</p>
-            <p className="flex items-center text-sm text-green-600 mb-4">
-              <TrendingUp className="h-4 w-4 mr-1" /> +15% /Month
-            </p>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={orderData}>
+          <CardContent className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={casesByStatus || []}
+                  dataKey="_count"
+                  nameKey="status"
+                  outerRadius={100}
+                  fill="var(--chart-1)"
+                  label={({ name, percent }: any) =>
+                    `${name} (${Math.round(percent * 100)}%)`
+                  }
+                >
+                  {(casesByStatus || []).map((_: any, idx: number) => {
+                    const root = document.documentElement;
+                    const fillColor = getComputedStyle(root).getPropertyValue(
+                      `--chart-${(idx % 5) + 1}`
+                    );
+                    return <Cell key={`cell-${idx}`} fill={fillColor} />;
+                  })}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Cases by Severity */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Cases by Severity</CardTitle>
+          </CardHeader>
+          <CardContent className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={casesBySeverity || []}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
+                <XAxis dataKey="severity" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="January" stroke="#8884d8" />
-                <Line type="monotone" dataKey="February" stroke="#000" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Revenue Profile */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Revenue Profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-xl font-semibold">$25,843.45</p>
-            <p className="flex items-center text-sm text-green-600 mb-4">
-              <TrendingUp className="h-4 w-4 mr-1" /> +11% /Month
-            </p>
-            <ResponsiveContainer width="100%" height={250}>
-              <AreaChart data={revenueData}>
-                <defs>
-                  <linearGradient id="revenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Area
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#8884d8"
-                  fill="url(#revenue)"
+                <Bar
+                  dataKey="_count"
+                  fill={getComputedStyle(
+                    document.documentElement
+                  ).getPropertyValue("--chart-2")}
                 />
-              </AreaChart>
+              </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
+
+      {/* Recent Cases Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Cases</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Case ID</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Severity</TableHead>
+                  <TableHead>Created At</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(recentCases || []).map((c: any) => (
+                  <TableRow key={c.id}>
+                    <TableCell>{c.id}</TableCell>
+                    <TableCell>{c.title}</TableCell>
+                    <TableCell>{c.status}</TableCell>
+                    <TableCell>{c.severity}</TableCell>
+                    <TableCell>
+                      {new Date(c.createdAt).toLocaleDateString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
