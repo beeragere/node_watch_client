@@ -1,0 +1,47 @@
+name: CI/CD React Docker Deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2. Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Build React app
+      - name: Build React app
+        run: npm run build
+
+      # 5. Build Docker image
+      - name: Build Docker image
+        run: docker build -t node-watch-client:${{ github.sha }} -f Dockerfile .
+
+      # 6. Deploy to VM via SSH
+      - name: SSH and deploy to VM
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          script: |
+            docker stop node-watch-client || true
+            docker rm node-watch-client || true
+            docker rmi node-watch-client:${{ github.sha }} || true
+            docker run -d -p 80:80 --name node-watch-client node-watch-client:${{ github.sha }}
