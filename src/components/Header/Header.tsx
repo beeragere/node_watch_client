@@ -1,24 +1,14 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useState } from "react";
-import { LogOut, Menu, Moon, Sun } from "lucide-react";
-import { useTheme } from "../ui/theme-provider";
+import { Button } from "@/components/ui/button";
+import { Bell, Moon, Sun } from "lucide-react";
+import { useTheme } from "@/components/ui/theme-provider";
 import Logo from "@/assets/images/logo.svg";
 
 type HeaderProps = {
-  onLogout?: () => void;
-  onProfile?: () => void;
-  onMenuToggle?: () => void;
+  title?: string;
 };
 
-export default function GithubHeader({
-  onLogout,
-  onProfile,
-  onMenuToggle,
-}: HeaderProps) {
-  const [search, setSearch] = useState("");
+export default function AppHeader({ title = "Dashboard" }: HeaderProps) {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
@@ -26,47 +16,32 @@ export default function GithubHeader({
   };
 
   return (
-    <Card className="w-full flex flex-row items-center justify-between p-4">
-      {/* Left: Hamburger + App Name */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <Button variant="ghost" onClick={onMenuToggle}>
-          <Menu />
-        </Button>
-        <img src={Logo} alt="Node Watch" className="w-8 h-8" />
-        <h1 className="text-2xl font-bold">Node Watch</h1>
+    <header className="flex items-center justify-between border-b px-4 py-2 w-[100%]">
+      {/* Left: Logo + Title */}
+      <div className="flex items-center gap-4">
+        <h1 className="text-lg font-semibold">{title}</h1>
       </div>
 
-      {/* Center: Search Bar */}
-      <div className="flex-1 mx-4">
-        <Input
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* Middle: Search */}
+      <div className="flex-1 max-w-md mx-4">
+        <div className="relative">
+          <Input type="text" placeholder="Search in here" className="pl-8" />
+          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+            🔍
+          </span>
+        </div>
       </div>
 
-      {/* Right: Profile + Logout */}
-      <div className="flex items-center gap-4 flex-shrink-0">
-        <Button variant="ghost" onClick={toggleTheme}>
+      {/* Right: Theme Toggle + Notification */}
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={toggleTheme}>
           {theme === "dark" ? (
             <Sun className="w-4 h-4" />
           ) : (
-            <Moon className="w-4 h-4" />
+            <Moon className="w-5 h-5" />
           )}
         </Button>
-        <Avatar className="w-10 h-10">
-          <AvatarImage src="/avatar.png" alt="User" />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-        <Button
-          variant="outline"
-          onClick={onLogout}
-          className="flex items-center gap-2"
-        >
-          <LogOut className="w-4 h-4" /> Logout
-        </Button>
       </div>
-    </Card>
+    </header>
   );
 }
