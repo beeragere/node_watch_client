@@ -1,27 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
 import { dashboardApi } from "@/api/dashboard.api";
 import AppHeader from "@/components/Header/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import {
   Bar,
+  BarChart,
   CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
 
 export default function Dashboard() {
   const { data: summary } = useQuery({

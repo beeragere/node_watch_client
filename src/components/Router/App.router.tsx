@@ -1,10 +1,13 @@
 // src/routes/AppRouter.tsx
-import { AuthProvider } from "@/context/Auth.context";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import PrivateRoute from "./private.route";
-import AuthTabs from "../Login/AuthTabs";
 import AppLayout from "@/components/Layout/AppLayout";
+import { AuthProvider } from "@/context/Auth.context";
+import Cases from "@/pages/Cases";
 import Dashboard from "@/pages/Dashboard";
+import Servers from "@/pages/Servers";
+import Vendors from "@/pages/Vendor";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AuthTabs from "../Login/AuthTabs";
+import PrivateRoute from "./private.route";
 
 export default function AppRouter() {
   return (
@@ -24,6 +27,9 @@ export default function AppRouter() {
           >
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/orders" element={<Dashboard />} />
+            <Route path="/servers" element={<Servers />} />
+            <Route path="/cases" element={<Cases />} />
+            <Route path="/vendors" element={<Vendors />} />
           </Route>
 
           {/* Fallback */}

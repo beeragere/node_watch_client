@@ -9,7 +9,7 @@ export default function AuthTabs() {
         <Tabs defaultValue="account">
           <TabsList className="mb-0">
             <TabsTrigger value="account">Login</TabsTrigger>
-            {/* <TabsTrigger value="register">Register</TabsTrigger> */}
+            <TabsTrigger value="register">Register</TabsTrigger>
           </TabsList>
 
           <TabsContent value="account">

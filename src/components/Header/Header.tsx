@@ -25,9 +25,7 @@ export default function AppHeader({ title = "Dashboard" }: HeaderProps) {
       <div className="flex-1 max-w-md mx-4">
         <div className="relative">
           <Input type="text" placeholder="Search in here" className="pl-8" />
-          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
-            🔍
-          </span>
+          <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground"></span>
         </div>
       </div>
 

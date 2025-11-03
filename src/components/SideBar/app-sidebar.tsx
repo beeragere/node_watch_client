@@ -1,5 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings, User } from "lucide-react";
 import Logo from "@/assets/images/logo.svg";
+import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -10,22 +10,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/Auth.context";
+import { Calendar, Home, Inbox, Settings, User } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const mainItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Orders", url: "/orders", icon: Inbox },
-  { title: "Food Menu", url: "/menu", icon: Calendar },
-  { title: "Riders", url: "/riders", icon: User },
-  { title: "Restaurant", url: "/restaurant", icon: Search },
-  { title: "Report", url: "/report", icon: Settings },
-  { title: "Message", url: "/messages", icon: Inbox },
+  { title: "Servers", url: "/servers", icon: Inbox },
+  { title: "Cases", url: "/cases", icon: Calendar },
+  { title: "Vendors", url: "/vendors", icon: User },
 ];
 
 const otherItems = [
-  { title: "Marketing", url: "/marketing", icon: Calendar },
   { title: "Support", url: "/support", icon: Inbox },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
