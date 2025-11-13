@@ -11,4 +11,10 @@ export const caseApi = {
     serverGroupId: number;
     vendorId: number;
   }) => api.post(`${API_BASE}/cases`, data).then((res) => res.data),
+  getById: async (id: number) => {
+    const res = await api.get(`${API_BASE}/cases/${id}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  },
 };

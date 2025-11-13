@@ -1,6 +1,7 @@
 // src/routes/AppRouter.tsx
 import AppLayout from "@/components/Layout/AppLayout";
 import { AuthProvider } from "@/context/Auth.context";
+import CaseDetails from "@/pages/CaseDetails";
 import Cases from "@/pages/Cases";
 import Dashboard from "@/pages/Dashboard";
 import Servers from "@/pages/Servers";
@@ -30,6 +31,7 @@ export default function AppRouter() {
             <Route path="/servers" element={<Servers />} />
             <Route path="/cases" element={<Cases />} />
             <Route path="/vendors" element={<Vendors />} />
+            <Route path="/cases/:id" element={<CaseDetails />} />
           </Route>
 
           {/* Fallback */}

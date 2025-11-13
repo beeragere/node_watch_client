@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import {
   Bar,
   BarChart,
@@ -43,6 +44,8 @@ export default function Dashboard() {
     queryKey: ["recent-cases"],
     queryFn: dashboardApi.getRecentCases,
   });
+
+  const navigate = useNavigate();
 
   return (
     <div className="p-6 space-y-6">
@@ -155,7 +158,10 @@ export default function Dashboard() {
               </TableHeader>
               <TableBody>
                 {(recentCases || []).map((c: any) => (
-                  <TableRow key={c.id}>
+                  <TableRow
+                    key={c.id}
+                    onClick={() => navigate(`/cases/${c.id}`)}
+                  >
                     <TableCell>{c.id}</TableCell>
                     <TableCell>{c.title}</TableCell>
                     <TableCell>{c.status}</TableCell>

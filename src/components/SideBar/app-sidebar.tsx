@@ -5,7 +5,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -87,14 +86,6 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <Separator className="my-4" />
-
-        {/* Others */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Others</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>{renderMenuItems(otherItems)}</SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );

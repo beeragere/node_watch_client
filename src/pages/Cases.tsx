@@ -28,10 +28,11 @@ import {
 } from "@/components/ui/table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Cases() {
   const queryClient = useQueryClient();
-  const { data: cases } = useQuery({
+  const { data: cases, isLoading } = useQuery({
     queryKey: ["cases"],
     queryFn: caseApi.getAll,
   });
@@ -90,6 +91,18 @@ export default function Cases() {
 
   const handlePrev = () => setPage((p) => Math.max(p - 1, 1));
   const handleNext = () => setPage((p) => Math.min(p + 1, totalPages));
+  const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center">
+          <div className="h-10 w-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mb-4" />
+          <p className="text-gray-600">Loading cases...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -236,7 +249,10 @@ export default function Cases() {
               </TableHeader>
               <TableBody>
                 {(paginatedCases || []).map((c: any) => (
-                  <TableRow key={c.id}>
+                  <TableRow
+                    key={c.id}
+                    onClick={() => navigate(`/cases/${c.id}`)}
+                  >
                     <TableCell>{c.id}</TableCell>
                     <TableCell>{c.caseId}</TableCell>
                     <TableCell>{c.title}</TableCell>
